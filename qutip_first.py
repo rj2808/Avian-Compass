@@ -30,3 +30,4 @@ def run():
     tripd=tensor(down,down) # Triplet state with spin -1
     
 
+
