@@ -31,9 +31,9 @@ def Hamiltonian_eigenvalues(theta1, theta2, phi1, phi2): # Here o refers to the 
 	T_N10 = qt.Qobj(T_N10n)
 	T_H6n = np.array([[0.1896, 0, 0], [0, -0.0464, 0], [0, 0, -0.1432]])
 	T_H6 = qt.Qobj(T_H6n)
-	T_H8n = np.zeros(3,3)
+	T_H8n = np.zeros((3,3))
 	T_H8 = qt.Qobj(T_H8n)
-	T_Hbn = np.zeros(3,3)
+	T_Hbn = np.zeros((3,3))
 	T_Hb = qt.Qobj(T_Hbn)
 	# Similarly for TrpH Radical
 	a_iso2 = np.array([.3215, -.5983, -.2780, -.488, -.0400, -.3636, 1.6046])
