@@ -109,7 +109,7 @@ def Hamiltonian_eigenvalues(theta,phi): # Here o refers to the angle
 	np.savetxt('H_b_eigen_30.txt', H_b_eigen)
 	return (H_a_eigen, H_b_eigen)
 
-(H_a_eigen30, H_b_eigen ) = Hamiltonian_eigenvalues(30, 0)
+(H_a_eigen30, H_b_eigen30 ) = Hamiltonian_eigenvalues(30, 0)
 print (H_a_eigen30, H_b_eigen30)
 np.savetxt('H_a_eigen_30.txt', H_a_eigen30)
 np.savetxt('H_b_eigen_30.txt', H_b_eigen30)
