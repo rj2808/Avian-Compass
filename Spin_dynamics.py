@@ -58,14 +58,15 @@ def Singlet_yield(theta, rate):
 					wa_mn = Ha_eigen_theta[m] - Ha_eigen_theta[n]						# Frequencies as deined in timmel et. al. 1998
 					wb_rs = Hb_eigen_theta[r] - Hb_eigen_theta[s]						
 					summation += (g_a[n,m] * g_b[r, s]) * (rate**2/(rate**2 + (wa_mn - wb_rs)**2))
-					print(chr(27) + "[2J")
-					print(m/576*100)
+		print(chr(27) + "[2J")
+		print(m/576*100)
 
 
-	singletyield = (summation/(576*384)
-	return Singlet_yield_infinity
-A = Singlet_yield(30, 10**4)
-print(A)
+	singletyield = (summation/(576*384))
+	return singletyield
+A = Singlet_yield(30, 10**4) 
+np.savetxt('yield.txt', [A])
+
 
 
 
