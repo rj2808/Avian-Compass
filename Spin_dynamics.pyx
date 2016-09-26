@@ -60,14 +60,6 @@ def Singlet_yield(theta, rate):
 
 	singletyield = (summation/(576*384))
 	return singletyield
-A = Singlet_yield(30, 10**4) 
-np.savetxt('yield30.txt', [A])
-B = Singlet_yield(0, 10**4) 
-np.savetxt('yield0.txt', [B])
-C = Singlet_yield(60, 10**4) 
-np.savetxt('yield0.txt', [C])
-D = Singlet_yield(90, 10**4) 
-np.savetxt('yield0.txt', [D])
 
 
 
