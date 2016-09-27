@@ -5,42 +5,37 @@ import matplotlib.pyplot as plt
 __author__ = 'Rakshit Jain'
 # We will be using the singlet and triplet dynamics as calculated by Ritz et. al. 2000
 # See Hamiltonian_Eigenvalues.py for more info
+I2_x = qt.jmat(1, 'x')
+I2_y = qt.jmat(1, 'y')
+I2_z = qt.jmat(1, 'z')
+# Defining Spin operators accoding to dimensions
+Sx_a 	 = qt.tensor(qt.sigmax(), qt.identity(288))
+Sy_a 	 = qt.tensor(qt.sigmay(), qt.identity(288))
+Sz_a     = qt.tensor(qt.sigmaz(), qt.identity(288))
+Sx_b 	 = qt.tensor(qt.sigmax(), qt.identity(192))
+Sy_b 	 = qt.tensor(qt.sigmay(), qt.identity(192))
+Sz_b     = qt.tensor(qt.sigmaz(), qt.identity(192))
+g_a		 = np.zeros((576, 576), dtype = np.complex128)
+g_b		 = np.zeros((384, 384), dtype = np.complex128)
+# Defining various g_jk values for the calculation of singlet yields
+for i in range(0, 576):
+	for j in range(0, 576):
+			g_a[i, j] += Sx_a[i, j]*Sx_a[j, i] + Sx_a[i, j]*Sy_a[j, i] + Sx_a[i, j]*Sz_a[j, i] 
+			g_a[i, j] += Sy_a[i, j]*Sx_a[j, i] + Sy_a[i, j]*Sy_a[j, i] + Sy_a[i, j]*Sz_a[j, i]
+			g_a[i, j] += Sz_a[i, j]*Sx_a[j, i] + Sz_a[i, j]*Sy_a[j, i] + Sz_a[i, j]*Sz_a[j, i]
+	print(chr(27) + "[2J")
+	print('g_a')
+	print(i/576*100)
+for i in range(0, 384):
+	for j in range(0, 384):
+			g_b[i, j] += Sx_b[i, j]*Sx_b[j, i] + Sx_b[i, j]*Sy_b[j, i] + Sx_b[i, j]*Sz_b[j, i] 
+			g_b[i, j] += Sy_b[i, j]*Sx_b[j, i] + Sy_b[i, j]*Sy_b[j, i] + Sy_b[i, j]*Sz_b[j, i]
+			g_b[i, j] += Sz_b[i, j]*Sx_b[j, i] + Sz_b[i, j]*Sy_b[j, i] + Sz_b[i, j]*Sz_b[j, i]
+	print(chr(27) + "[2J")
+	print('g_b')
+	print(i/384*100)
 def Singlet_yield(theta, rate):
 	# This function calculates singlet yield according to Cintolesi et. al. 2003
-
-
-	# Defining basic spin operators
-	I2_x = qt.jmat(1, 'x')
-	I2_y = qt.jmat(1, 'y')
-	I2_z = qt.jmat(1, 'z')
-	# Defining Spin operators accoding to dimensions
-	Sx_a 	 = qt.tensor(qt.sigmax(), qt.identity(288))
-	Sy_a 	 = qt.tensor(qt.sigmay(), qt.identity(288))
-	Sz_a     = qt.tensor(qt.sigmaz(), qt.identity(288))
-	Sx_b 	 = qt.tensor(qt.sigmax(), qt.identity(192))
-	Sy_b 	 = qt.tensor(qt.sigmay(), qt.identity(192))
-	Sz_b     = qt.tensor(qt.sigmaz(), qt.identity(192))
-	g_a		 = np.zeros((576, 576), dtype = np.complex128)
-	g_b		 = np.zeros((384, 384), dtype = np.complex128)
-	# Defining various g_jk values for the calculation of singlet yields
-	for i in range(0, 576):
-		for j in range(0, 576):
-				g_a[i, j] += Sx_a[i, j]*Sx_a[j, i] + Sx_a[i, j]*Sy_a[j, i] + Sx_a[i, j]*Sz_a[j, i] 
-				g_a[i, j] += Sy_a[i, j]*Sx_a[j, i] + Sy_a[i, j]*Sy_a[j, i] + Sy_a[i, j]*Sz_a[j, i]
-				g_a[i, j] += Sz_a[i, j]*Sx_a[j, i] + Sz_a[i, j]*Sy_a[j, i] + Sz_a[i, j]*Sz_a[j, i]
-				print(chr(27) + "[2J")
-				print('g_a')
-				print(i/576*100)
-	for i in range(0, 384):
-		for j in range(0, 384):
-				g_b[i, j] += Sx_b[i, j]*Sx_b[j, i] + Sx_b[i, j]*Sy_b[j, i] + Sx_b[i, j]*Sz_b[j, i] 
-				g_b[i, j] += Sy_b[i, j]*Sx_b[j, i] + Sy_b[i, j]*Sy_b[j, i] + Sy_b[i, j]*Sz_b[j, i]
-				g_b[i, j] += Sz_b[i, j]*Sx_b[j, i] + Sz_b[i, j]*Sy_b[j, i] + Sz_b[i, j]*Sz_b[j, i]
-				print(chr(27) + "[2J")
-				print('g_b')
-				print(i/576*100)
-	# Now since g is defined we move on to calculate singlet yield generator and final values at t -> infinity
-
 	# Loading the file regarding eigenvalues
 	opened_fileA =  str(theta*10 + 1)
 	opened_fileB = 	str(theta*10 + 1)
@@ -65,7 +60,14 @@ def Singlet_yield(theta, rate):
 	singletyield = (summation/(576*384))
 	return singletyield
 A = Singlet_yield(30, 10**4) 
-np.savetxt('yield.txt', [A])
+np.savetxt('yield30.txt', [A])
+B = Singlet_yield(0, 10**4) 
+np.savetxt('yield0.txt', [B])
+C = Singlet_yield(60, 10**4) 
+np.savetxt('yield0.txt', [C])
+D = Singlet_yield(90, 10**4) 
+np.savetxt('yield0.txt', [D])
+
 
 
 
