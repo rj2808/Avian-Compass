@@ -1,4 +1,4 @@
-# For Details see the supplements of Hancock et.al. 2016 Quantum Needle of Avaian Compass
+# For Details see the supplements of Hancock et.al. 2016 Quantum Needle of Avian Compass
 __author__ = 'Rakshit Jain'
 import qutip as qt
 import math as mt
@@ -24,8 +24,11 @@ def Hamiltonian_eigenvalues(theta,phi): # Here o refers to the angle
 	Sy_b = -.8269 * Sx +  .0995 * Sy +  .5535 * Sz
 	Sz_b =  .4438 * Sx +  .7199 * Sy +  .5336 * Sz
 	# Defining Constants here
-	omega = 1.4 * 10**9				#Larmor Frequency in Hz for 50 microT
-	g = 2  							# Electron Parameter
+	omega = 1.4 * 10**6				#Larmor Frequency in Hz for 50 microT
+	g = 2  	
+	m_b = 5.7883818066*10**-5
+	par=m_b*2.417990504024*10**11  #s-1/mT
+	Gamma = 2 *	5.7883818066*10**-5						# eV/T
 	# Isotropic Hyperfine Coupling Vector
 	#For FAD Radical
 	a_iso1 = np.array([.5233, .1887, -0.3872, 0.4399, 0.4070])
@@ -61,21 +64,28 @@ def Hamiltonian_eigenvalues(theta,phi): # Here o refers to the angle
 	# H_b denotes the Hamiltonian for TrpH radical
 
 	Ha_zeeman_nt = omega * (Sx * mt.sin(theta) *  mt.cos(phi) + Sy *  mt.sin(theta) * mt. sin(phi) + Sz * mt.cos(theta))
-	Ha_zeeman = qt.tensor(Ha_zeeman_nt, qt.identity(3**7))			# Compounding different states 
+	Ha_zeeman = qt.tensor(Ha_zeeman_nt, qt.identity(3**2*2**5))			# Compounding different states 
 	# Using the anisotropic hyperfine tensors the hamiltonian comes down to this
-	Ha_hfi_N5  = qt.tensor( qt.identity(3**0), float(a_iso1[0]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) + qt.tensor(Sx, T_N5n[2] * I2_x) + qt.tensor(Sy, T_N5n[1] * I2_y) + qt.tensor(Sz, T_N5n[0] * I2_z), qt.identity(3**6))
+	Ha_hfi_N5  = par*qt.tensor( float(a_iso1[0]) * (qt.tensor(Sx,qt.identity(3**0),I2_x) + qt.tensor(Sy,qt.identity(3**0),  I2_y) + qt.tensor(Sz,qt.identity(3**0), I2_z)) +\
+					 qt.tensor(Sx,qt.identity(3**0), T_N5n[2] * I2_x) + qt.tensor(Sy, qt.identity(3**0),T_N5n[1] * I2_y) + qt.tensor(Sz, qt.identity(3**0), T_N5n[0] * I2_z), qt.identity(3*2**5))
 
-	Ha_hfi_N10 = qt.tensor( qt.identity(3**1),  float(a_iso1[1])*(qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_N10n[2] * I2_x) + qt.tensor(Sy, T_N10n[1] * I2_y) + qt.tensor(Sz, T_N10n[0] * I2_z), qt.identity(3**5))
+	Ha_hfi_N10 = par*qt.tensor( float(a_iso1[1]) * (qt.tensor(Sx,qt.identity(3**1), I2_x) + qt.tensor(Sy,qt.identity(3**1), I2_y) + qt.tensor(Sz,qt.identity(3**1), I2_z)) +\
+					  qt.tensor(Sx,qt.identity(3**1), T_N10n[2] * I2_x) + qt.tensor(Sy,qt.identity(3**1), T_N10n[1] * I2_y) + qt.tensor(Sz,qt.identity(3**1), T_N10n[0] * I2_z), qt.identity(2**5))
 
-	Ha_hfi_H6  = qt.tensor( qt.identity(3**2), float(a_iso1[2]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_H6n[2] * I2_x) + qt.tensor(Sy, T_H6n[1] * I2_y) + qt.tensor(Sz, T_H6n[0] * I2_z), qt.identity(3**4))
+	Ha_hfi_H6  = par*qt.tensor( float(a_iso1[2]) * (qt.tensor(Sx,qt.identity(3**2), I1_x) + qt.tensor(Sy,qt.identity(3**2), I1_y) + qt.tensor(Sz,qt.identity(3**2), I1_z)) +\
+					  qt.tensor(Sx,qt.identity(3**2), T_H6n[2] * I1_x) + qt.tensor(Sy,qt.identity(3**2), T_H6n[1] * I1_y) + qt.tensor(Sz,qt.identity(3**2), T_H6n[0] * I1_z), qt.identity(2**4))
 
-	Ha_hfi_H8  = qt.tensor( qt.identity(3**3), float(a_iso1[3]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_H8n[2] * I2_x) + qt.tensor(Sy, T_H8n[1] * I2_y) + qt.tensor(Sz, T_H8n[0] * I2_z), qt.identity(3**3))
+	Ha_hfi_H8  = par*qt.tensor( float(a_iso1[3]) * (qt.tensor(Sx,qt.identity(3**2*2), I1_x) + qt.tensor(Sy,qt.identity(3**2*2), I1_y) + qt.tensor(Sz,qt.identity(3**2*2), I1_z)) +\
+					  qt.tensor(Sx,qt.identity(3**2*2), T_H8n[2] * I1_x) + qt.tensor(Sy,qt.identity(3**2*2), T_H8n[1] * I1_y) + qt.tensor(Sz,qt.identity(3**2*2), T_H8n[0] * I1_z), qt.identity(2**3))
 
-	Ha_hfi_b1  = qt.tensor( qt.identity(3**4), float(a_iso1[4]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_Hbn[2] * I2_x) + qt.tensor(Sy, T_Hbn[1] * I2_y) + qt.tensor(Sz, T_Hbn[0] * I2_z), qt.identity(3**2))
+	Ha_hfi_b1  = par*qt.tensor( float(a_iso1[4]) * (qt.tensor(Sx,qt.identity(3**2*2**2), I1_x) + qt.tensor(Sy,qt.identity(3**2*2**2), I1_y) + qt.tensor(Sz,qt.identity(3**2*2**2), I1_z)) +\
+					  qt.tensor(Sx,qt.identity(3**2*2**2), T_Hbn[2] * I1_x) + qt.tensor(Sy,qt.identity(3**2*2**2), T_Hbn[1] * I1_y) + qt.tensor(Sz,qt.identity(3**2*2**2), T_Hbn[0] * I1_z), qt.identity(2**2))
 
-	Ha_hfi_b2  = qt.tensor( qt.identity(3**5), float(a_iso1[4]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_Hbn[2] * I2_x) + qt.tensor(Sy, T_Hbn[1] * I2_y) + qt.tensor(Sz, T_Hbn[0] * I2_z), qt.identity(3**1))
+	Ha_hfi_b2  = par*qt.tensor( float(a_iso1[4]) * (qt.tensor(Sx,qt.identity(3**2*2**3), I1_x) + qt.tensor(Sy,qt.identity(3**2*2**3), I1_y) + qt.tensor(Sz,qt.identity(3**2*2**3), I1_z)) +\
+					  qt.tensor(Sx,qt.identity(3**2*2**3), T_Hbn[2] * I1_x) + qt.tensor(Sy,qt.identity(3**2*2**3), T_Hbn[1] * I1_y) + qt.tensor(Sz,qt.identity(3**2*2**3), T_Hbn[0] * I1_z), qt.identity(2**1))
 
-	Ha_hfi_b3  = qt.tensor( qt.identity(3**6), float(a_iso1[4]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_Hbn[2] * I2_x) + qt.tensor(Sy, T_Hbn[1] * I2_y) + qt.tensor(Sz, T_Hbn[0] * I2_z), qt.identity(3**0))
+	Ha_hfi_b3  = par*qt.tensor( float(a_iso1[4]) * (qt.tensor(Sx,qt.identity(3**2*2**4), I1_x) + qt.tensor(Sy,qt.identity(3**2*2**4), I1_y) + qt.tensor(Sz,qt.identity(3**2*2**4), I1_z)) +\
+					  qt.tensor(Sx,qt.identity(3**2*2**4), T_Hbn[2] * I1_x) + qt.tensor(Sy,qt.identity(3**2*2**4), T_Hbn[1] * I1_y) + qt.tensor(Sz,qt.identity(3**2*2**4), T_Hbn[0] * I1_z), qt.identity(2**0))
 	# Everything is pretty clear upto this point
 	H_a1 = Ha_hfi_N5.data + Ha_hfi_N10.data + Ha_hfi_H6.data + Ha_hfi_H8.data + Ha_hfi_b1.data + Ha_hfi_b2.data + Ha_hfi_b3.data + Ha_zeeman.data
 	H_a = qt.Qobj(H_a1)
@@ -85,34 +95,51 @@ def Hamiltonian_eigenvalues(theta,phi): # Here o refers to the angle
 
 	# Now doing the same for the other TrpH molecule
 	Hb_zeeman_nt = omega * (Sx_b * mt.sin(theta) *  mt.cos(phi) + Sy_b *  mt.sin(theta) * mt. sin(phi) + Sz_b * mt.cos(theta))			# Hamiltonian without any tensor product
-	Hb_zeeman = qt.tensor(Hb_zeeman_nt, qt.identity(3**7))			# Compounding different states 
+	Hb_zeeman = par*qt.tensor(Hb_zeeman_nt, qt.identity(3*2**6))			# Compounding different states 
 	# Using the anisotropic hyperfine tensors the hamiltonian comes down to this
-	Hb_hfi_N1  = qt.tensor(float(a_iso2[0]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_N1n[0] * I2_x) + qt.tensor(Sy, T_N1n[1] * I2_y) + qt.tensor(Sz, T_N1n[2] * I2_z), qt.identity(3**6))
+	Hb_hfi_N1  = par*qt.tensor(float(a_iso2[0]) * (qt.tensor(Sx,qt.identity(3**0), I2_x) + qt.tensor(Sy,qt.identity(3**0), I2_y) + qt.tensor(Sz,qt.identity(3**0), I2_z)) +\
+					 qt.tensor(Sx,qt.identity(3**0), T_N1n[0] * I2_x) + qt.tensor(Sy,qt.identity(3**0), T_N1n[1] * I2_y) + qt.tensor(Sz,qt.identity(3**0), T_N1n[2] * I2_z), qt.identity(2**6))
 
-	Hb_hfi_H1  = qt.tensor( qt.identity(3**1), float(a_iso2[1]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_H1n[2] * I2_x) + qt.tensor(Sy, T_H1n[1] * I2_y) + qt.tensor(Sz, T_H1n[0] * I2_z), qt.identity(3**5))
+	Hb_hfi_H1  = par*qt.tensor(float(a_iso2[1]) * (qt.tensor(Sx,qt.identity(3**1), I1_x) + qt.tensor(Sy,qt.identity(3**1), I1_y) + qt.tensor(Sz,qt.identity(3**1), I1_z)) +\
+					  qt.tensor(Sx,qt.identity(3**1), T_H1n[2] * I1_x) + qt.tensor(Sy,qt.identity(3**1), T_H1n[1] * I1_y) + qt.tensor(Sz,qt.identity(3**1), T_H1n[0] * I1_z), qt.identity(2**5))
 
-	Hb_hfi_H2  = qt.tensor( qt.identity(3**2), float(a_iso2[2]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_H2n[2] * I2_x) + qt.tensor(Sy, T_H2n[1] * I2_y) + qt.tensor(Sz, T_H2n[0] * I2_z), qt.identity(3**4))
+	Hb_hfi_H2  = par*qt.tensor(float(a_iso2[2]) * (qt.tensor(Sx,qt.identity(3**1*2**1), I1_x) + qt.tensor(Sy,qt.identity(3**1*2**1), I1_y) + qt.tensor(Sz,qt.identity(3**1*2**1), I1_z)) +\
+					  qt.tensor(Sx,qt.identity(3**1*2**1), T_H2n[2] * I1_x) + qt.tensor(Sy,qt.identity(3**1*2**1), T_H2n[1] * I1_y) + qt.tensor(Sz,qt.identity(3**1*2**1), T_H2n[0] * I1_z), qt.identity(2**4))
 
-	Hb_hfi_H4  = qt.tensor( qt.identity(3**3), float(a_iso2[3]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_H4n[2] * I2_x) + qt.tensor(Sy, T_H4n[1] * I2_y) + qt.tensor(Sz, T_H4n[0] * I2_z), qt.identity(3**3))
+	Hb_hfi_H4  = par*qt.tensor(float(a_iso2[3]) * (qt.tensor(Sx,qt.identity(3**1*2**2), I1_x) + qt.tensor(Sy,qt.identity(3**1*2**2), I1_y) + qt.tensor(Sz,qt.identity(3**1*2**2), I1_z)) +\
+					  qt.tensor(Sx,qt.identity(3**1*2**2), T_H4n[2] * I1_x) + qt.tensor(Sy,qt.identity(3**1*2**2), T_H4n[1] * I1_y) + qt.tensor(Sz,qt.identity(3**1*2**2), T_H4n[0] * I1_z), qt.identity(2**3))
 
-	Hb_hfi_H5  = qt.tensor( qt.identity(3**4), float(a_iso2[4]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_H5n[2] * I2_x) + qt.tensor(Sy, T_H5n[1] * I2_y) + qt.tensor(Sz, T_H5n[0] * I2_z), qt.identity(3**2))
+	Hb_hfi_H5  = par*qt.tensor(float(a_iso2[4]) * (qt.tensor(Sx,qt.identity(3**1*2**3), I1_x) + qt.tensor(Sy,qt.identity(3**1*2**3), I1_y) + qt.tensor(Sz,qt.identity(3**1*2**3), I1_z)) +\
+					  qt.tensor(Sx,qt.identity(3**1*2**3), T_H5n[2] * I1_x) + qt.tensor(Sy,qt.identity(3**1*2**3), T_H5n[1] * I1_y) + qt.tensor(Sz,qt.identity(3**1*2**3), T_H5n[0] * I1_z), qt.identity(2**2))
 
-	Hb_hfi_H7  = qt.tensor( qt.identity(3**5), float(a_iso2[5]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_H7n[2] * I2_x) + qt.tensor(Sy, T_H7n[1] * I2_y) + qt.tensor(Sz, T_H7n[0] * I2_z), qt.identity(3**1))
+	Hb_hfi_H7  = par*qt.tensor(float(a_iso2[5]) * (qt.tensor(Sx,qt.identity(3**1*2**4), I1_x) + qt.tensor(Sy,qt.identity(3**1*2**4), I1_y) + qt.tensor(Sz,qt.identity(3**1*2**4), I1_z)) +
+					  qt.tensor(Sx,qt.identity(3**1*2**4), T_H7n[2] * I1_x) + qt.tensor(Sy,qt.identity(3**1*2**4), T_H7n[1] * I1_y) + qt.tensor(Sz,qt.identity(3**1*2**4), T_H7n[0] * I1_z), qt.identity(2**1))
 
-	Hb_hfi_Hb1 = qt.tensor( qt.identity(3**6), float(a_iso2[6]) * (qt.tensor(Sx, I2_x) + qt.tensor(Sy, I2_y) + qt.tensor(Sz, I2_z)) +  qt.tensor(Sx, T_Hb1n[2] * I2_x) + qt.tensor(Sy, T_Hb1n[1] * I2_y) + qt.tensor(Sz, T_Hb1n[0] * I2_z), qt.identity(3**0))
+	Hb_hfi_Hb1 = par*qt.tensor(float(a_iso2[6]) * (qt.tensor(Sx,qt.identity(3**1*2**5), I1_x) + qt.tensor(Sy,qt.identity(3**1*2**5), I1_y) + qt.tensor(Sz,qt.identity(3**1*2**5), I1_z)) +
+					  qt.tensor(Sx,qt.identity(3**1*2**5), T_Hb1n[2] * I1_x) + qt.tensor(Sy,qt.identity(3**1*2**5), T_Hb1n[1] * I1_y) + qt.tensor(Sz,qt.identity(3**1*2**5), T_Hb1n[0] * I1_z), qt.identity(2**0))
 				# Hamiltonian without any tensor product
-
+	#print Hb_hfi_Hb1.shape
 	H_b1 = Hb_zeeman.data + Hb_hfi_N1.data + Hb_hfi_H1.data + Hb_hfi_H2.data + Hb_hfi_H4.data + Hb_hfi_H5.data + Hb_hfi_H7.data + Hb_hfi_Hb1.data
 	H_b = qt.Qobj(H_b1)
 	H_b_eigen = H_b.eigenenergies()
-	np.savetxt('H_a_eigen_30.txt', H_a_eigen)
-	np.savetxt('H_b_eigen_30.txt', H_b_eigen)
 	return (H_a_eigen, H_b_eigen)
 
-(H_a_eigen30, H_b_eigen30 ) = Hamiltonian_eigenvalues(30, 0)
-print (H_a_eigen30, H_b_eigen30)
-np.savetxt('H_a_eigen_30.txt', H_a_eigen30)
-np.savetxt('H_b_eigen_30.txt', H_b_eigen30)
+#(H_a_eigen80, H_b_eigen80 ) = Hamiltonian_eigenvalues(90, 0)
+#np.savetxt('901.txt', H_a_eigen80)
+#np.savetxt('902.txt', H_b_eigen80)
+
+#(H_a_eigen60, H_b_eigen60 ) = Hamiltonian_eigenvalues(60, 0)
+#np.savetxt('601.txt', H_a_eigen60)
+#np.savetxt('602.txt', H_b_eigen60)
+
+#(H_a_eigen30, H_b_eigen30 ) = Hamiltonian_eigenvalues(30, 0)
+#np.savetxt('301.txt', H_a_eigen30)
+#np.savetxt('302.txt', H_b_eigen30)
+
+#(H_a_eigen0, H_b_eigen0 ) = Hamiltonian_eigenvalues(0, 0)
+#np.savetxt('1.txt', H_a_eigen0)
+#np.savetxt('2.txt', H_b_eigen0)
+
 
 
 
